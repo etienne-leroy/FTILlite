@@ -1,0 +1,300 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    expose:
+      - 15672
+    ports:
+      - 5672:${MQ_PORT}
+      - 15672:15672
+    hostname: ${MQ_HOST_NAME}
+    environment:
+      RABBITMQ_DEFAULT_USER: ${MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${MQ_PW}
+  jupyter:
+    build: Coordinator
+    ports:
+    - ${JP_PORT}:${JP_PORT}
+    expose:
+    - ${JP_PORT}
+    volumes:
+    - ./Coordinator/Notebooks:/app/notebooks
+    command: jupyter ${JP_MODE} --ip=0.0.0.0 --port=${JP_PORT} --allow-root --no-browser --NotebookApp.token='${JP_PW}'
+  peer0:
+    build: Peer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      FTILITE_NODE_ID: ${N0_ID}
+      FTILITE_NODE_NAME: ${N0_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N0_DB_USER} password=${N0_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N0_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer0:${N0_PORT}
+      FTILITE_PORT: ${N0_PORT}
+      FTILITE_EXTERNAL_FQDN: peer0
+      FTILITE_ENABLE_GPU: ${GPU_ENABLED}
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N0_PORT}
+    ports:
+      - ${N0_PORT}:${N0_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all
+      - debug_one_peers
+      - debug_two_peers
+      - debug_three_peers
+  peer1:
+    build: Peer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      FTILITE_NODE_ID: ${N1_ID}
+      FTILITE_NODE_NAME: ${N1_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N1_DB_USER} password=${N1_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N1_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer1:${N1_PORT}
+      FTILITE_PORT: ${N1_PORT}
+      FTILITE_EXTERNAL_FQDN: peer1
+      FTILITE_ENABLE_GPU: ${GPU_ENABLED}
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N1_PORT}
+    ports:
+      - ${N1_PORT}:${N1_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all
+  peer2:
+    build: Peer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      FTILITE_NODE_ID: ${N2_ID}
+      FTILITE_NODE_NAME: ${N2_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N2_DB_USER} password=${N2_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N2_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer2:${N2_PORT}
+      FTILITE_PORT: ${N2_PORT}
+      FTILITE_EXTERNAL_FQDN: peer2
+      FTILITE_ENABLE_GPU: ${GPU_ENABLED}
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N2_PORT}
+    ports:
+      - ${N2_PORT}:${N2_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all
+      - debug_one_peer
+      - debug_two_peers
+      - debug_three_peers
+  peer3:
+    build: Peer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      FTILITE_NODE_ID: ${N3_ID}
+      FTILITE_NODE_NAME: ${N3_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N3_DB_USER} password=${N3_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N3_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer3:${N3_PORT}
+      FTILITE_PORT: ${N3_PORT}
+      FTILITE_EXTERNAL_FQDN: peer3
+      FTILITE_ENABLE_GPU: ${GPU_ENABLED}
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N3_PORT}
+    ports:
+      - ${N3_PORT}:${N3_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all
+      - debug_two_peers
+      - debug_three_peers
+  peer4:
+    build: Peer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      FTILITE_NODE_ID: ${N4_ID}
+      FTILITE_NODE_NAME: ${N4_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N4_DB_USER} password=${N4_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N4_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer4:${N4_PORT}
+      FTILITE_PORT: ${N4_PORT}
+      FTILITE_EXTERNAL_FQDN: peer4
+      FTILITE_ENABLE_GPU: "true"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N4_PORT}
+    ports:
+      - ${N4_PORT}:${N4_PORT}
+    depends_on:
+      - "rabbitmq"
+    profiles:
+      - all
+      - debug_three_peers
+  peer0_nogpu:
+    build: Peer
+    environment:
+      FTILITE_NODE_ID: ${N0_ID}
+      FTILITE_NODE_NAME: ${N0_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N0_DB_USER} password=${N0_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N0_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer0_nogpu:${N0_PORT}
+      FTILITE_PORT: ${N0_PORT}
+      FTILITE_EXTERNAL_FQDN: peer0_nogpu
+      FTILITE_ENABLE_GPU: "false"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N0_PORT}
+    ports:
+      - ${N0_PORT}:${N0_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all_nogpu
+  peer1_nogpu:
+    build: Peer
+    environment:
+      FTILITE_NODE_ID: ${N1_ID}
+      FTILITE_NODE_NAME: ${N1_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N1_DB_USER} password=${N1_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N1_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer1_nogpu:${N1_PORT}
+      FTILITE_PORT: ${N1_PORT}
+      FTILITE_EXTERNAL_FQDN: peer1_nogpu
+      FTILITE_ENABLE_GPU: "false"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N1_PORT}
+    ports:
+      - ${N1_PORT}:${N1_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all_nogpu
+  peer2_nogpu:
+    build: Peer
+    environment:
+      FTILITE_NODE_ID: ${N2_ID}
+      FTILITE_NODE_NAME: ${N2_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N2_DB_USER} password=${N2_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N2_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer2_nogpu:${N2_PORT}
+      FTILITE_PORT: ${N2_PORT}
+      FTILITE_EXTERNAL_FQDN: peer2_nogpu
+      FTILITE_ENABLE_GPU: "false"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N2_PORT}
+    ports:
+      - ${N2_PORT}:${N2_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all_nogpu
+  peer3_nogpu:
+    build: Peer
+    environment:
+      FTILITE_NODE_ID: ${N3_ID}
+      FTILITE_NODE_NAME: ${N3_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N3_DB_USER} password=${N3_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N3_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer3_nogpu:${N3_PORT}
+      FTILITE_PORT: ${N3_PORT}
+      FTILITE_EXTERNAL_FQDN: peer3_nogpu
+      FTILITE_ENABLE_GPU: "false"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N3_PORT}
+    ports:
+      - ${N3_PORT}:${N3_PORT}
+    depends_on:
+      - "rabbitmq"
+      - "postgres"
+    profiles:
+      - all_nogpu
+  peer4_nogpu:
+    build: Peer
+    environment:
+      FTILITE_NODE_ID: ${N4_ID}
+      FTILITE_NODE_NAME: ${N4_NAME}
+      FTILITE_MQ_ADDR: amqp://${MQ_USER}:${MQ_PW}@${MQ_HOST_NAME}:${MQ_PORT}/
+      FTILITE_DB_TYPE: postgres
+      FTILITE_DB_ADDR: host=postgres port=${DB_PORT} user=${N4_DB_USER} password=${N4_DB_PW} dbname=${DB_DEFAULT_DB} search_path=${N4_DB_SCHEMA} sslmode=disable
+      FTILITE_ADDRESS: peer4_nogpu:${N4_PORT}
+      FTILITE_PORT: ${N4_PORT}
+      FTILITE_EXTERNAL_FQDN: peer4_nogpu
+      FTILITE_ENABLE_GPU: "false"
+      FTILITE_DB_CHUNKSIZE: "1000000000"
+    expose:
+      - ${N4_PORT}
+    ports:
+      - ${N4_PORT}:${N4_PORT}
+    depends_on:
+      - "rabbitmq"
+    profiles:
+      - all_nogpu
+  postgres:
+      image: postgres:10.5
+      restart: always
+      environment:
+        POSTGRES_USER: ${DB_DEFAULT_USER}
+        POSTGRES_PASSWORD: ${DB_DEFAULT_PW}
+        POSTGRES_DB: ${DB_DEFAULT_DB}
+        POSTGRES_MULTIPLE_USER: ${N0_DB_USER},${N1_DB_USER},${N2_DB_USER},${N3_DB_USER},${N4_DB_USER}
+        POSTGRES_MULTIPLE_PASSWORD: ${N0_DB_PW},${N1_DB_PW},${N2_DB_PW},${N3_DB_PW},${N4_DB_PW}
+        POSTGRES_MULTIPLE_SCHEMAS: ${N0_DB_SCHEMA},${N1_DB_SCHEMA},${N2_DB_SCHEMA},${N3_DB_SCHEMA},${N4_DB_SCHEMA}
+      logging:
+        options:
+          max-size: 10m
+          max-file: "3"
+      ports:
+        - 5438:${DB_PORT}
+      expose:
+        - ${DB_LOCAL_PORT}
+      volumes: 
+        - ./postgres-data:/var/lib/postgresql/data

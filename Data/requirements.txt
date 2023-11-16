@@ -1,0 +1,11 @@
+networkx
+matplotlib
+numpy
+pandas
+powerlaw
+sqlalchemy
+psycopg2-binary
+sqlalchemy-utils
+sqlalchemy_views
+python-dotenv
+click

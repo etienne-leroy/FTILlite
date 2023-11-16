@@ -1,0 +1,3 @@
+[submodule "Peer/lib/libftcrypto"]
+	path = Peer/lib/libftcrypto
+	url = git@github.com/AUSTRAC/libftcrypto.git

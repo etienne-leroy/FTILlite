@@ -1,0 +1,7 @@
+requests
+pytest
+numpy
+pika
+sqlalchemy
+psycopg2-binary
+sqlalchemy_views
