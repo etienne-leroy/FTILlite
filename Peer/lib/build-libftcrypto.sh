@@ -10,7 +10,7 @@ else
 fi
 
 if [[ -z "${CUDA_VERSION}" ]]; then
-  CUDA_VERSION=12.0.1
+  CUDA_VERSION=11.8.0
 else
   CUDA_VERSION="${CUDA_VERSION}"
 fi
@@ -28,7 +28,7 @@ mkdir -p ./out
 # You can switch between using docker or a local install of nvcc by un/commenting the following lines.
 # The target environment must be running the same (or newer) version of the CUDA library as we use to compile here.
 
-docker run --rm -v"$PWD:/src" "nvidia/cuda:${CUDA_VERSION}-devel-ubuntu20.04" nvcc --compiler-options '-fPIC' --shared -arch "${CUDA_ARCH}" -o /src/out/libftcrypto.so /src/src/ftcrypto.cu
+docker run --rm -v"$PWD:/src" "nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04" nvcc --compiler-options '-fPIC' --shared -arch "${CUDA_ARCH}" -o /src/out/libftcrypto.so /src/src/ftcrypto.cu
 
 # requires: nvidia-cuda-toolkit, build-essential
 # nvcc --compiler-options '-fPIC' --shared -arch "${CUDA_ARCH}" -o ./out/libftcrypto.so ./src/ftcrypto.cu
