@@ -362,10 +362,18 @@ def get_transaction_times(n_tx, start_date_str, date_range, start_time, end_time
 
 def print_graph_info(G, dir_name):
     with open(dir_name + "/graph_info.txt", 'w') as info_file:
+        '''
         info_file.write(nx.info(G) + '\n')
         info_file.write('Graph Density: ' + str(nx.density(G)) + '\n')
         info_file.write('Average Clustering Coefficient: '
                         + str(nx.average_clustering(G)) + '\n')
+        '''
+        # nx.info alternative - temporary fix
+        info_file.write(f"Name: {G.name}\n")
+        info_file.write(f"Nodes: {G.number_of_nodes()}\n")
+        info_file.write(f"Edges: {G.number_of_edges()}\n")
+        info_file.write(f"Density: {nx.density(G)}\n")
+        info_file.write(f"Avg clustering: {nx.average_clustering(G)}\n")
 
         # Get degree distribution and power-law indexes
         degrees = [G.degree(n) for n in G.nodes()]
