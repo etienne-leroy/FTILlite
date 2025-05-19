@@ -13,7 +13,7 @@ if [[ -z "${CUDA_VERSION}" ]]; then
   CUDA_VERSION=12.2
 else
   CUDA_VERSION="${CUDA_VERSION}"
-fi
+
 
 set -e
 
