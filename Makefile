@@ -39,7 +39,7 @@ build_schema:
 	( cd Data ; python build_pickle_schema.py )
 
 generate_data:
-	( cd Data ; python generate_data.py params.ini )
+	( cd Data ; python generate_data_lux.py params_lux.ini )
 	( cd Data ; python load_data.py )
 
 generate_data_large:
