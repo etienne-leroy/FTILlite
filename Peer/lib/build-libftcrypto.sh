@@ -4,15 +4,15 @@
 # see https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 # for list of support values.
 if [[ -z "${CUDA_ARCH}" ]]; then
-  CUDA_ARCH=${1-sm_61}
-else
-  CUDA_ARCH=${1-$CUDA_ARCH}
+  CUDA_ARCH=sm_75
+#else
+#  CUDA_ARCH=${1-$CUDA_ARCH}
 fi
 
 if [[ -z "${CUDA_VERSION}" ]]; then
-  CUDA_VERSION=12.2
-else
-  CUDA_VERSION="${CUDA_VERSION}"
+  CUDA_VERSION=12.2.2 # Changed default to 12.2.2
+#else
+#  CUDA_VERSION="${CUDA_VERSION}"
 fi
 
 set -e
