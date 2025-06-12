@@ -10,9 +10,7 @@
 # from sqlalchemy import Column, Integer, String, Date, Numeric, DateTime, MetaData, Table
 from sqlalchemy import create_engine, inspect, schema
 from sqlalchemy.sql import text
-from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy import exc
+from sqlalchemy.orm import declarative_base  # Updated import
 import os
 from os.path import join, dirname, isfile
 from dotenv import load_dotenv
@@ -52,31 +50,34 @@ database = os.environ.get("DB_DEFAULT_DB", "ftillite")
 # csv_loc = f'synthesised_data/{sorted(all_subdirs)[-1]}' # Get the latest generated data
 engine = create_engine(f'postgresql://{username}:{password}@{address}/{database}')
 
-for idx, s in enumerate(node_schemas):
-    s_lc = s.lower()
-    n_lc = node_usernames[idx].lower()
+with engine.connect() as connection:
+    for idx, s in enumerate(node_schemas):
+        s_lc = s.lower()
+        n_lc = node_usernames[idx].lower()
 
-    # Pickle table
-    engine.execute(f'''CREATE TABLE IF NOT EXISTS {s_lc}.pickle
-        (
-            destination character varying COLLATE pg_catalog."default",
-            dtype character varying(20) COLLATE pg_catalog."default",
-            handle character varying(20) COLLATE pg_catalog."default",
-            opcode character varying(10) COLLATE pg_catalog."default",
-            data bytea,
-            elementindex integer,
-            chunkindex integer,
-            created timestamp without time zone
-        )
-        WITH (
-            OIDS = FALSE
-        )
-        TABLESPACE pg_default;
+        # Pickle table
+        connection.execute(text(f'''CREATE TABLE IF NOT EXISTS {s_lc}.pickle
+            (
+                destination character varying COLLATE pg_catalog."default",
+                dtype character varying(20) COLLATE pg_catalog."default",
+                handle character varying(20) COLLATE pg_catalog."default",
+                opcode character varying(10) COLLATE pg_catalog."default",
+                data bytea,
+                elementindex integer,
+                chunkindex integer,
+                created timestamp without time zone
+            )
+            WITH (
+                OIDS = FALSE
+            )
+            TABLESPACE pg_default;'''))
 
-        ALTER TABLE IF EXISTS {s_lc}.pickle
-            OWNER TO {username};
+        connection.execute(text(f'''ALTER TABLE IF EXISTS {s_lc}.pickle
+                OWNER TO "{username}";'''))
 
-        GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE {s}.pickle TO {n_lc} ;
-        GRANT ALL ON TABLE {s}.pickle TO {username};''')
-
-
+        connection.execute(text(f'''GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE {s_lc}.pickle TO "{n_lc}";'''))
+        connection.execute(text(f'''GRANT ALL ON TABLE {s_lc}.pickle TO "{username}";'''))
+        
+        print(f"Pickle table setup in schema {s_lc} for user {n_lc}")
+    
+    connection.commit()

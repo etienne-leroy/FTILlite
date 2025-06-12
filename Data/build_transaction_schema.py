@@ -10,7 +10,7 @@
 from sqlalchemy import Column, Integer, String, Date, Numeric
 from sqlalchemy import create_engine, inspect, schema
 from sqlalchemy.sql import text
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base  # Updated import
 from sqlalchemy import exc
 from sqlalchemy_utils import database_exists, create_database, drop_database
 import os
@@ -60,13 +60,16 @@ if __name__ == "__main__":
    
     # Rename old database
     backup_database = f"{database}_{datetime.now().strftime('%d_%m_%y_%H_%M_%S')}"
-    if click.confirm(f'\nNote: Running this script will delete the database "{database}" if it exists.\nDo you want to back this up to "{backup_database}"?', default=True):
-        if database_exists(engine.url):
-            admin_engine.execute(f"ALTER DATABASE {database} RENAME TO {backup_database}")
+    
+    if database_exists(engine.url):
+        # Use connection instead of engine.execute
+        with admin_engine.connect() as connection:
+            connection.execute(text(f'ALTER DATABASE "{database}" RENAME TO "{backup_database}"'))
+            connection.commit()
     else:
         if database_exists(engine.url):
             drop_database(engine.url)
-    # exit(0)
+    
     create_database(engine.url)
 
     # Declare and create base tables
@@ -93,86 +96,93 @@ if __name__ == "__main__":
         account_type = Column(String)
         cust_occupation = Column(String)
 
-
     inspector = inspect(engine)
 
-    # Create schemas
-    for idx, s in enumerate(node_schemas):
-        engine.execute(schema.CreateSchema(s))
+    # Create schemas using connection
+    with engine.connect() as connection:
+        for idx, s in enumerate(node_schemas):
+            connection.execute(schema.CreateSchema(s))
+        connection.commit()
 
     Base.metadata.create_all(engine)
 
-    # Create users
-    for usr, pw in zip(node_usernames, node_passwords):
-        cur = engine.execute(f"SELECT COUNT(*) FROM pg_catalog.pg_roles WHERE rolname = '{usr}'")
-        n, = cur.fetchone()
-        user_exists = True
-        if n == 0:
-            # Create User
-            engine.execute(f"CREATE USER {usr} WITH PASSWORD '{pw}';")
-        else:
-            # Update User
-            engine.execute(f"ALTER USER {usr} WITH PASSWORD '{pw}';")
+    # Create users using connection
+    with engine.connect() as connection:
+        for usr, pw in zip(node_usernames, node_passwords):
+            cur = connection.execute(text(f"SELECT COUNT(*) FROM pg_catalog.pg_roles WHERE rolname = '{usr}'"))
+            n, = cur.fetchone()
+            if n == 0:
+                # Create User
+                connection.execute(text(f"CREATE USER \"{usr}\" WITH PASSWORD '{pw}';"))
+            else:
+                # Update User
+                connection.execute(text(f"ALTER USER \"{usr}\" WITH PASSWORD '{pw}';"))
+        connection.commit()
 
-    # Load transcations
-
-    # Add indexes
+    # Add indexes using connection
     try:
-        engine.execute('''CREATE INDEX IF NOT EXISTS idx_transaction
-        ON public.transactions USING btree
-        (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST)
-        TABLESPACE pg_default;''')
-        print("Transaction Indexes Created")
+        with engine.connect() as connection:
+            connection.execute(text('''CREATE INDEX IF NOT EXISTS idx_transaction
+            ON public.transactions USING btree
+            (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST)
+            TABLESPACE pg_default;'''))
+            print("Transaction Indexes Created")
 
-        engine.execute('''CREATE INDEX idx_account
-        ON public.accounts USING btree
-        (account_id ASC NULLS LAST, bsb ASC NULLS LAST);''')
-        print("Account Indexes Created")
+            connection.execute(text('''CREATE INDEX IF NOT EXISTS idx_account
+            ON public.accounts USING btree
+            (account_id ASC NULLS LAST, bsb ASC NULLS LAST);'''))
+            print("Account Indexes Created")
+            connection.commit()
     except exc.ProgrammingError as ex:
+        print(f"Index creation error: {ex}")
         pass
 
-    # Create Views
-    for idx, p in enumerate(node_names):
-        
-        p_lc = p.lower()
+    # Create Views using connection
+    with engine.connect() as connection:
+        for idx, schema_name in enumerate(node_schemas):
+            node_name = node_names[idx]
+            
+            print(f"{node_name} - View Creation Started for schema {schema_name}")
 
-        print(f"{p} - Account View and Index Creation Started")
+            # Create views that filter for the correct peer based on the node name
+            # This maps the node name directly to the peer name in the data
+            if node_name == 'COORDINATOR':
+                # Create empty views for coordinator (regulatory body)
+                print(f"Creating empty views for {schema_name} (regulatory coordinator)")
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.accounts AS SELECT * FROM public.accounts WHERE false'))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.transactions AS SELECT * FROM public.transactions WHERE false'))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bsb, origin_id, dest_bsb, dest_id FROM public.transactions WHERE false'))
+            else:
+                # For peer nodes, use the node name directly as the peer identifier
+                actual_peer = node_name  # This should be PEER_1, PEER_2, etc.
+                print(f"Creating data views for {schema_name} filtering for peer {actual_peer}")
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.accounts AS SELECT * FROM public.accounts WHERE re = \'{actual_peer}\''))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.transactions AS SELECT * FROM public.transactions WHERE origin_re = \'{actual_peer}\' OR dest_re = \'{actual_peer}\''))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bsb, origin_id, dest_bsb, dest_id FROM public.transactions WHERE origin_re = \'{actual_peer}\' OR dest_re = \'{actual_peer}\''))
 
-        # Account views
-        definition = text(f"""SELECT * FROM public.accounts WHERE "re"='{p}'""")
-        engine.execute(f'CREATE MATERIALIZED VIEW {p_lc}.accounts AS {definition}')
-        print(f"{p} - Account View Created")
-        engine.execute(f'''CREATE INDEX {p_lc}_idx_account
-        ON {p_lc}.accounts USING btree
-        (account_id ASC NULLS LAST, bsb ASC NULLS LAST);''')
-        print(f"{p} - Account Index Created")
+            # Create indexes for all schemas (even empty ones)
+            connection.execute(text(f'''CREATE INDEX {schema_name}_idx_account
+            ON {schema_name}.accounts USING btree
+            (account_id ASC NULLS LAST, bsb ASC NULLS LAST);'''))
+            print(f"{node_name} - Account Index Created")
 
-        # Transaction Views
-        definition = text(f"""SELECT * FROM public.transactions WHERE "origin_re"='{p}' or "dest_re"='{p}'""")
-        engine.execute(f'CREATE MATERIALIZED VIEW {p_lc}.transactions AS {definition}')
-        print(f"{p} - Transaction View Created")
-        engine.execute(f'''CREATE INDEX IF NOT EXISTS {p_lc}_idx_transaction
-        ON {p_lc}.transactions USING btree
-        (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST)
-        TABLESPACE pg_default;''')
-        print(f"{p} - Transaction Index Created")
-        
-        # Transaction Edges Views
-        definition = text(f"""SELECT DISTINCT origin_bsb, origin_id, dest_bsb, dest_id FROM public.transactions WHERE "origin_re"='{p}' or "dest_re"='{p}'""")
-        engine.execute(f'CREATE MATERIALIZED VIEW {p_lc}.edges AS {definition}')
-        print(f"{p} - Edges View Created")
-        engine.execute(f'''CREATE INDEX {p_lc}_idx_edges
-        ON {p_lc}.edges USING btree
-        (origin_bsb ASC NULLS LAST, origin_id ASC NULLS LAST, dest_bsb ASC NULLS LAST, dest_id ASC NULLS LAST)
-        ;''')
-        print(f"{p} - Edges Index Created")
-        
-        # Grant acess to user for all views 
-        engine.execute(f'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA {p_lc} TO {p_lc}_user;')
-        
-        # Grant acess to user for schema
-        engine.execute(f'GRANT USAGE ON SCHEMA {p_lc} TO {p_lc}_user;')
+            connection.execute(text(f'''CREATE INDEX {schema_name}_idx_transaction
+            ON {schema_name}.transactions USING btree
+            (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST);'''))
+            print(f"{node_name} - Transaction Index Created")
+            
+            connection.execute(text(f'''CREATE INDEX {schema_name}_idx_edges
+            ON {schema_name}.edges USING btree
+            (origin_bsb ASC NULLS LAST, origin_id ASC NULLS LAST, dest_bsb ASC NULLS LAST, dest_id ASC NULLS LAST);'''))
+            print(f"{node_name} - Edges Index Created")
+            
+            # Grant access to user for all views 
+            user_name = node_usernames[idx]
+            connection.execute(text(f'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA {schema_name} TO "{user_name}";'))
+            connection.execute(text(f'GRANT USAGE ON SCHEMA {schema_name} TO "{user_name}";'))
 
-        print(f"{p} - Account View and Index Creation Finished")
+            print(f"{node_name} - View Creation Finished")
+        
+        connection.commit()
 
     print(f"Schema Creation Finished")
