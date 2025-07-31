@@ -6,9 +6,9 @@ services:
     expose:
       - 15672
     ports:
-      - 5672:${MQ_PORT}
+      - 5672:${MQ_PORT} # MQ_PORT is 5672 from .env
       - 15672:15672
-    hostname: ${MQ_HOST_NAME}
+    hostname: ${MQ_HOST_NAME} # MQ_HOST_NAME is mq-server
     environment:
       RABBITMQ_DEFAULT_USER: ${MQ_USER}
       RABBITMQ_DEFAULT_PASS: ${MQ_PW}
@@ -22,13 +22,12 @@ services:
     - ./Coordinator/Notebooks:/app/notebooks
     command: jupyter ${JP_MODE} --ip=0.0.0.0 --port=${JP_PORT} --allow-root --no-browser --NotebookApp.token='${JP_PW}'
   peer0:
-    build: Peer
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2} # Default to 12.2.2 if not in .env
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}    # Default to sm_75 if not in .env
+    runtime: nvidia
     environment:
       FTILITE_NODE_ID: ${N0_ID}
       FTILITE_NODE_NAME: ${N0_NAME}
@@ -40,6 +39,8 @@ services:
       FTILITE_EXTERNAL_FQDN: peer0
       FTILITE_ENABLE_GPU: ${GPU_ENABLED}
       FTILITE_DB_CHUNKSIZE: "1000000000"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
     expose:
       - ${N0_PORT}
     ports:
@@ -53,13 +54,12 @@ services:
       - debug_two_peers
       - debug_three_peers
   peer1:
-    build: Peer
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
+    runtime: nvidia
     environment:
       FTILITE_NODE_ID: ${N1_ID}
       FTILITE_NODE_NAME: ${N1_NAME}
@@ -71,6 +71,8 @@ services:
       FTILITE_EXTERNAL_FQDN: peer1
       FTILITE_ENABLE_GPU: ${GPU_ENABLED}
       FTILITE_DB_CHUNKSIZE: "1000000000"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
     expose:
       - ${N1_PORT}
     ports:
@@ -81,13 +83,12 @@ services:
     profiles:
       - all
   peer2:
-    build: Peer
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
+    runtime: nvidia
     environment:
       FTILITE_NODE_ID: ${N2_ID}
       FTILITE_NODE_NAME: ${N2_NAME}
@@ -99,6 +100,8 @@ services:
       FTILITE_EXTERNAL_FQDN: peer2
       FTILITE_ENABLE_GPU: ${GPU_ENABLED}
       FTILITE_DB_CHUNKSIZE: "1000000000"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
     expose:
       - ${N2_PORT}
     ports:
@@ -112,13 +115,12 @@ services:
       - debug_two_peers
       - debug_three_peers
   peer3:
-    build: Peer
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
+    runtime: nvidia
     environment:
       FTILITE_NODE_ID: ${N3_ID}
       FTILITE_NODE_NAME: ${N3_NAME}
@@ -130,6 +132,8 @@ services:
       FTILITE_EXTERNAL_FQDN: peer3
       FTILITE_ENABLE_GPU: ${GPU_ENABLED}
       FTILITE_DB_CHUNKSIZE: "1000000000"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
     expose:
       - ${N3_PORT}
     ports:
@@ -142,13 +146,12 @@ services:
       - debug_two_peers
       - debug_three_peers
   peer4:
-    build: Peer
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
+    runtime: nvidia
     environment:
       FTILITE_NODE_ID: ${N4_ID}
       FTILITE_NODE_NAME: ${N4_NAME}
@@ -160,6 +163,8 @@ services:
       FTILITE_EXTERNAL_FQDN: peer4
       FTILITE_ENABLE_GPU: "true"
       FTILITE_DB_CHUNKSIZE: "1000000000"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
     expose:
       - ${N4_PORT}
     ports:
@@ -170,7 +175,11 @@ services:
       - all
       - debug_three_peers
   peer0_nogpu:
-    build: Peer
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
     environment:
       FTILITE_NODE_ID: ${N0_ID}
       FTILITE_NODE_NAME: ${N0_NAME}
@@ -192,7 +201,11 @@ services:
     profiles:
       - all_nogpu
   peer1_nogpu:
-    build: Peer
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
     environment:
       FTILITE_NODE_ID: ${N1_ID}
       FTILITE_NODE_NAME: ${N1_NAME}
@@ -214,7 +227,11 @@ services:
     profiles:
       - all_nogpu
   peer2_nogpu:
-    build: Peer
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
     environment:
       FTILITE_NODE_ID: ${N2_ID}
       FTILITE_NODE_NAME: ${N2_NAME}
@@ -236,7 +253,11 @@ services:
     profiles:
       - all_nogpu
   peer3_nogpu:
-    build: Peer
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
     environment:
       FTILITE_NODE_ID: ${N3_ID}
       FTILITE_NODE_NAME: ${N3_NAME}
@@ -258,7 +279,11 @@ services:
     profiles:
       - all_nogpu
   peer4_nogpu:
-    build: Peer
+    build:
+      context: Peer
+      args:
+        CUDA_VERSION_ARG: ${CUDA_VERSION:-12.2.2}
+        CUDA_ARCH_ARG: ${CUDA_ARCH:-sm_75}
     environment:
       FTILITE_NODE_ID: ${N4_ID}
       FTILITE_NODE_NAME: ${N4_NAME}

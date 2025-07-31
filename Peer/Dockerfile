@@ -1,5 +1,7 @@
-# CUDA Version: 11.8.0
+# CUDA Version: 12.2 (defined by CUDA_VERSION_ARG, typically from .env)
 # Go Version: 1.18.3
+
+ARG CUDA_VERSION_ARG=12.2.2 
 
 # Step 1: Create a base stage that can be used for building the Go code. We do this first so that the Docker engine
 # will (potentially) cache the final layer of this stage and use it for subsequent builds.
@@ -38,12 +40,20 @@ RUN cd ./segment && go test -v ./...
 RUN go build -o ./ftillite-peer ./cmd/segment/main.go
 
 # Step 3. Create the (final) image that will be used to run ftillite. 
-FROM nvidia/cuda:11.8.0-base-ubuntu22.04 AS runtime
+FROM nvidia/cuda:${CUDA_VERSION_ARG}-base-ubuntu22.04 AS runtime
 WORKDIR /app
+
+# Ensure NVIDIA tools are in PATH
+ENV PATH="/usr/local/nvidia/bin:${PATH}"
 
 COPY --from=build-go /go/src/github.com/AUSTRAC/ftillite/Peer/ftillite-peer /app/ftillite-peer
 COPY --from=build-go /lib/libftcrypto.so /lib/libftcrypto.so
 
-ENV FTILITE_ENABLE_GPU=false
+# Copy and set up the entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-CMD ["/app/ftillite-peer"]
+ENV FTILITE_ENABLE_GPU=true 
+
+ENTRYPOINT ["/app/entrypoint.sh"]
+# CMD is now handled by the entrypoint script
