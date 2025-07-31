@@ -8,10 +8,14 @@
 ########################################
 
 import ftillite as fl
-
 from pair import *
+import sys
+import colorsys
+from rich.console import Console  # type: ignore
 
-print("Importing ElGamal cryptosystem.")
+console = Console()
+console.print("Imported ElGamal Cryptosystem.\n", style="bold green")
+
 
 class ElGamalCipher(Pair):
   def __init__(self, mask = None, masked_message = None):

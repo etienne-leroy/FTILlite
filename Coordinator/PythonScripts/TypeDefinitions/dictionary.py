@@ -7,6 +7,7 @@
 #  
 ########################################
 
+from pair import *
 import ftillite as fl
 
 class Dict(fl.Identifier):
@@ -51,7 +52,7 @@ class Dict(fl.Identifier):
   def copy(self):
     return Dict(self.k, self.v)
 
-  def __setitem__(self, k, v):
+  def __setitem__(self, k, v, fc):
     if type(k) is slice:
       if k != slice(None, None, None):
         raise KeyError("Only the slice ':' is supported.")
@@ -101,6 +102,7 @@ class Dict(fl.Identifier):
   def __isub__(self, other):
     self._raw_update(other)
     self.v[self.listmap[other.keys().flatten()]] -= other.values()
+    return self
 
   def __imul__(self, other):
     # This can be optimised. As is, it creates new keys with zero values,
