@@ -7,7 +7,7 @@
 #  
 ########################################
 
-from sqlalchemy import Column, Integer, String, Date, Numeric
+from sqlalchemy import Column, Integer, String, Date, Numeric, BigInteger
 from sqlalchemy import create_engine, inspect, schema
 from sqlalchemy.sql import text
 from sqlalchemy.orm import declarative_base  # Updated import
@@ -60,12 +60,12 @@ if __name__ == "__main__":
    
     # Rename old database
     backup_database = f"{database}_{datetime.now().strftime('%d_%m_%y_%H_%M_%S')}"
-    
-    if database_exists(engine.url):
-        # Use connection instead of engine.execute
-        with admin_engine.connect() as connection:
-            connection.execute(text(f'ALTER DATABASE "{database}" RENAME TO "{backup_database}"'))
-            connection.commit()
+    if click.confirm(f'\nNote: Running this script will delete the database "{database}" if it exists.\nDo you want to back this up to "{backup_database}"?', default=True):
+        if database_exists(engine.url):
+            # Use connection instead of engine.execute
+            with admin_engine.connect() as connection:
+                connection.execute(text(f'ALTER DATABASE "{database}" RENAME TO "{backup_database}"'))
+                connection.commit()
     else:
         if database_exists(engine.url):
             drop_database(engine.url)
@@ -79,19 +79,19 @@ if __name__ == "__main__":
         __tablename__ = 'transactions'
         id = Column(Integer, primary_key=True)
         origin_re = Column(String(RE_NAME_LEN))
-        origin_id = Column(Integer)
-        origin_bsb = Column(Integer)
+        origin_id = Column(BigInteger)  # Use BigInteger for 13-digit account numbers
+        origin_bank_id = Column(Integer)
         dest_re = Column(String(RE_NAME_LEN))
-        dest_id = Column(Integer)
-        dest_bsb = Column(Integer)
+        dest_id = Column(BigInteger)    # Use BigInteger for 13-digit account numbers
+        dest_bank_id = Column(Integer)
         total_amount = Column(Numeric(13,2))
         transaction_date = Column(Date)
         
     class Accounts(Base):
         __tablename__ = 'accounts'
         re = Column(String(RE_NAME_LEN))
-        account_id = Column(Integer, primary_key=True)
-        bsb = Column(Integer, primary_key=True)
+        account_id = Column(BigInteger, primary_key=True)  # Use BigInteger for 13-digit account numbers
+        bank_id = Column(Integer, primary_key=True)
         account_open_date = Column(Date)
         account_type = Column(String)
         cust_occupation = Column(String)
@@ -124,13 +124,13 @@ if __name__ == "__main__":
         with engine.connect() as connection:
             connection.execute(text('''CREATE INDEX IF NOT EXISTS idx_transaction
             ON public.transactions USING btree
-            (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST)
+            (origin_id ASC NULLS LAST, origin_bank_id ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bank_id ASC NULLS LAST)
             TABLESPACE pg_default;'''))
             print("Transaction Indexes Created")
 
             connection.execute(text('''CREATE INDEX IF NOT EXISTS idx_account
             ON public.accounts USING btree
-            (account_id ASC NULLS LAST, bsb ASC NULLS LAST);'''))
+            (account_id ASC NULLS LAST, bank_id ASC NULLS LAST);'''))
             print("Account Indexes Created")
             connection.commit()
     except exc.ProgrammingError as ex:
@@ -151,29 +151,29 @@ if __name__ == "__main__":
                 print(f"Creating empty views for {schema_name} (regulatory coordinator)")
                 connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.accounts AS SELECT * FROM public.accounts WHERE false'))
                 connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.transactions AS SELECT * FROM public.transactions WHERE false'))
-                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bsb, origin_id, dest_bsb, dest_id FROM public.transactions WHERE false'))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bank_id, origin_id, dest_bank_id, dest_id FROM public.transactions WHERE false'))
             else:
                 # For peer nodes, use the node name directly as the peer identifier
                 actual_peer = node_name  # This should be PEER_1, PEER_2, etc.
                 print(f"Creating data views for {schema_name} filtering for peer {actual_peer}")
                 connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.accounts AS SELECT * FROM public.accounts WHERE re = \'{actual_peer}\''))
                 connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.transactions AS SELECT * FROM public.transactions WHERE origin_re = \'{actual_peer}\' OR dest_re = \'{actual_peer}\''))
-                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bsb, origin_id, dest_bsb, dest_id FROM public.transactions WHERE origin_re = \'{actual_peer}\' OR dest_re = \'{actual_peer}\''))
+                connection.execute(text(f'CREATE MATERIALIZED VIEW {schema_name}.edges AS SELECT DISTINCT origin_bank_id, origin_id, dest_bank_id, dest_id FROM public.transactions WHERE origin_re = \'{actual_peer}\' OR dest_re = \'{actual_peer}\''))
 
             # Create indexes for all schemas (even empty ones)
             connection.execute(text(f'''CREATE INDEX {schema_name}_idx_account
             ON {schema_name}.accounts USING btree
-            (account_id ASC NULLS LAST, bsb ASC NULLS LAST);'''))
+            (account_id ASC NULLS LAST, bank_id ASC NULLS LAST);'''))
             print(f"{node_name} - Account Index Created")
 
             connection.execute(text(f'''CREATE INDEX {schema_name}_idx_transaction
             ON {schema_name}.transactions USING btree
-            (origin_id ASC NULLS LAST, origin_bsb ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bsb ASC NULLS LAST);'''))
+            (origin_id ASC NULLS LAST, origin_bank_id ASC NULLS LAST, dest_id ASC NULLS LAST, dest_bank_id ASC NULLS LAST);'''))
             print(f"{node_name} - Transaction Index Created")
             
             connection.execute(text(f'''CREATE INDEX {schema_name}_idx_edges
             ON {schema_name}.edges USING btree
-            (origin_bsb ASC NULLS LAST, origin_id ASC NULLS LAST, dest_bsb ASC NULLS LAST, dest_id ASC NULLS LAST);'''))
+            (origin_bank_id ASC NULLS LAST, origin_id ASC NULLS LAST, dest_bank_id ASC NULLS LAST, dest_id ASC NULLS LAST);'''))
             print(f"{node_name} - Edges Index Created")
             
             # Grant access to user for all views 
