@@ -1,0 +1,79 @@
+================================================================================
+FINTRACER INVESTIGATION REPORT
+================================================================================
+Generated: 2025-07-31 10:47:07
+Total Suspicious Accounts: 114
+Total Transactions Analyzed: 22262
+Internal Suspicious-to-Suspicious Connections: 1751
+External Transactions (involving suspicious accounts): 20511
+
+SUSPICIOUS ACCOUNTS BY NODE:
+----------------------------------------
+  PEER_1: 28 accounts
+  PEER_2: 26 accounts
+  PEER_3: 35 accounts
+  PEER_4: 25 accounts
+
+TOP MONEY FLOW ANALYSIS:
+----------------------------------------
+  Account: LU314014430005009234
+    Net Flow: $209,564.15
+    Total In: $264,890.02
+    Total Out: $55,325.87
+    Transactions: 172
+
+  Account: LU922016904797773849
+    Net Flow: $-174,979.03
+    Total In: $52,235.67
+    Total Out: $227,214.70
+    Transactions: 179
+
+  Account: LU911016085677591342
+    Net Flow: $-167,556.15
+    Total In: $401,054.94
+    Total Out: $568,611.09
+    Transactions: 1360
+
+  Account: LU801015851879247277
+    Net Flow: $-160,455.13
+    Total In: $41,591.64
+    Total Out: $202,046.77
+    Transactions: 225
+
+  Account: LU152015760604793679
+    Net Flow: $-152,086.04
+    Total In: $435,571.13
+    Total Out: $587,657.17
+    Transactions: 1308
+
+  Account: LU113016079331489895
+    Net Flow: $126,202.28
+    Total In: $179,195.09
+    Total Out: $52,992.81
+    Transactions: 160
+
+  Account: LU283015458576311479
+    Net Flow: $112,450.48
+    Total In: $159,610.77
+    Total Out: $47,160.29
+    Transactions: 171
+
+  Account: LU173015006354668458
+    Net Flow: $103,752.62
+    Total In: $212,198.34
+    Total Out: $108,445.72
+    Transactions: 321
+
+  Account: LU253015707251089856
+    Net Flow: $101,399.91
+    Total In: $279,674.06
+    Total Out: $178,274.15
+    Transactions: 585
+
+  Account: LU121014773403850644
+    Net Flow: $-93,075.25
+    Total In: $93,980.31
+    Total Out: $187,055.56
+    Transactions: 375
+
+================================================================================

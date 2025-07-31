@@ -40,39 +40,32 @@ build_libcrypto:
 	( cd Peer/lib ; ./build-libftcrypto.sh )
 
 build_schema:
-	( source .venv/bin/activate ; cd Data ; python build_transaction_schema.py )
-	( source .venv/bin/activate ; cd Data ; python build_pickle_schema.py )
+	( source .venv/bin/activate ; cd Data ; cd Australia ; python build_transaction_schema.py )
+	( source .venv/bin/activate ; cd Data ; cd Australia ; python build_pickle_schema.py )
 
 build_schema_eu:
-	( source .venv/bin/activate ; cd Data ; python build_transaction_schema_eu.py )
-	( source .venv/bin/activate ; cd Data ; python build_pickle_schema_eu.py )
+	( source .venv/bin/activate ; cd Data ; cd EU ; python build_transaction_schema_eu.py )
+	( source .venv/bin/activate ; cd Data ; cd EU ; python build_pickle_schema_eu.py )
 
 generate_data:
 	@echo "Building schema..."
 	$(MAKE) build_schema
 	@echo "Generating data files..."
-	( source .venv/bin/activate ; cd Data ; python generate_data.py params.ini )
+	( source .venv/bin/activate ; cd Data ; cd Australia ; python generate_data.py params.ini )
 	@echo "Loading data into database..."
-	( source .venv/bin/activate ; cd Data ; python load_data.py )
+	( source .venv/bin/activate ; cd Data ; cd Australia ; python load_data.py )
 
 generate_data_eu:
 	@echo "Building EU schema..."
 	$(MAKE) build_schema_eu
 	@echo "Generating EU data files..."
-	( source .venv/bin/activate ; cd Data ; python generate_data_eu.py params_eu.ini )
+	( source .venv/bin/activate ; cd Data ; cd EU ; python generate_data_eu.py params_eu.ini )
 	@echo "Loading EU data into database..."
-	( source .venv/bin/activate ; cd Data ; python load_data_eu.py )
-
-generate_data_mini:
-	@echo "Generating mini data files..."
-	( cd Data ; python generate_data.py params_mini.ini )
-	@echo "Building database schema if necessary (will prompt if db exists)..."
-	@echo "Loading mini data into database..."
-	( cd Data ; python load_data.py )
+	( source .venv/bin/activate ; cd Data ; cd EU ; python load_data_eu.py )
 
 generate_data_large:
-	( cd Data ; python generate_data_large.py params_large.ini )
-	( cd Data ; python load_data.py )
+	( cd Data ; cd Australia ; python generate_data_large.py params_large.ini )
+	( cd Data ; cd Australia ; python load_data.py )
 
 generate_all:
 	@echo "--- Starting Full Project Regeneration ---"

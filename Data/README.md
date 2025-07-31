@@ -6,7 +6,9 @@ Recommended to use a linux system or WSL.
 
 # Generate Data
 
-To generate synthetic data, firstly install the required Python packages:
+## Australian Transaction Data
+
+To generate synthetic Australian transaction data, firstly install the required Python packages:
 ```
 pip install -r requirements.txt
 ```
@@ -17,6 +19,17 @@ python generate_data.py params.ini
 or in the root directory run the following:
 ```
 make generate_data
+```
+
+## European Transaction Data
+
+To generate synthetic European transaction data:
+```
+python generate_data_eu.py params_eu.ini
+```
+or in the root directory run the following:
+```
+make generate_data_eu
 ```
 
 You can tweak the config ini file; however, it is not required.
@@ -31,6 +44,12 @@ Then run:
 ```
 python data_load_postgres.py
 ```
+
+For European data:
+```
+python load_data_eu.py
+```
+
 # Large Dataset Generation
 
 For datasets that exceed 1 million nodes, it is recommended to use the generate_data_large.py file. 

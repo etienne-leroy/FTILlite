@@ -1,0 +1,6 @@
+Name: 
+Nodes: 1000
+Edges: 5980
+Density: 0.005985985985985986
+Avg clustering: 0.09290038119482326
+Power law exponent of degree distribution: 2.9714408354067885

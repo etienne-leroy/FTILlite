@@ -43,15 +43,36 @@ make build_all
 make start_all
 ```
 
+## Full Project Regeneration
+
+For a complete fresh start with clean Docker environment and new data, use:
+```
+make generate_all
+```
+This command performs a comprehensive project refresh including:
+- Stopping all services and removing volumes/images
+- Cleaning Docker builder cache
+- Rebuilding libftcrypto and all Docker images
+- Starting services with fresh EU transaction data
+
 ## Update database schema
 
 To update the database schema ensure that the postgres container is running. From the Database folder run the `update-postgres-container.sh` script. Note that you may need to change the name of the target container within the script from `ftillite-postgres-1` to `ftillite_postgres_1` depending on your environment.
 
 ## Populate the database locally
 
-To populate the database to use the auxdb_read command, perform the following with the FTILLITE system running via the above docker-compose command. Note that you will want to use a linux environment such as WSL due to Numpy limitations on windows systems for the data generation.
+### Australian Transaction Data
+
+To populate the database with Australian transaction data, perform the following with the FTILLITE system running via the above docker-compose command. Note that you will want to use a linux environment such as WSL due to Numpy limitations on windows systems for the data generation.
 ```
 make generate_data
+```
+
+### European Transaction Data
+
+To populate the database with European transaction data:
+```
+make generate_data_eu
 ```
 
 Note that you can tweak parameters on the data generation; see DataGenerator/README.MD for details.
@@ -63,6 +84,46 @@ Also note that if you have an older version of the database running or have chan
 2. Delete the postgres-data folder
 
 3. Run ```make start_all```
+
+## Financial Transaction Analysis (FinTracer)
+
+The FTILLITE solution includes comprehensive financial transaction analysis capabilities through the FinTracer module, which implements various money laundering typologies and suspicious transaction patterns.
+
+### Available Typologies
+
+The following financial crime typologies are available for analysis:
+
+| Typology | Command | Description |
+| -------- | ------- | ----------- |
+| Unified Analysis | `make fintracer` | Comprehensive analysis including all typologies with optional result storage and deep analysis |
+| Linear (3 accounts) | `make linear3` | Simple layering through 3 sequential accounts |
+| Non-linear (4 accounts) | `make nonlinear4` | Complex routing through 4 accounts with multiple paths |
+| Tree (5 accounts) | `make tree5` | Hierarchical distribution pattern across 5 accounts |
+| Accumulation | `make accum` | Fund aggregation from multiple sources into target accounts |
+
+### Running FinTracer Analysis
+
+To run the complete financial analysis suite:
+```
+make fintracer
+```
+
+This will execute the unified FinTracer script which provides options to:
+- Run individual typology analyses
+- Store results for further investigation
+- Perform comprehensive cross-typology analysis
+- Generate detailed reports
+
+Individual typologies can also be run separately using their respective make commands.
+
+### Investigation Tools
+
+For detailed investigation of suspicious patterns identified by FinTracer:
+```
+make investigate
+```
+
+The FinTracer module includes helper function libraries and type definition libraries to maintain clean, modular code structure while providing comprehensive analysis capabilities.
 
 # Developement
 
