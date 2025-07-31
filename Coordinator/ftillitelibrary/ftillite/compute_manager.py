@@ -91,6 +91,11 @@ class ComputeManager:
         return valuearray[0]
 
     def init(self, context):
+        if not self.segment_clients:
+            raise ValueError(
+                "ComputeManager initialization failed: No segment managers (peers) configured. "
+                "Please ensure `peer_names` is set in `FTILConf` and is not empty."
+            )
         # This is a direct function call that, if the compute manager is
         # separated to another process, will have to be replaced by text
         # communication. There will still need to be a local Python object

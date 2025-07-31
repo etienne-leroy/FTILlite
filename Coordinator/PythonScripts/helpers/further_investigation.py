@@ -225,7 +225,7 @@ def trace_money_flow(transactions_df, suspicious_accounts):
     
     return flow_analysis
 
-def generate_investigation_report(results_dict, output_dir="v2.0/investigation_reports"):
+def generate_investigation_report(results_dict, output_dir="fintracer-eu/investigation_reports"):
     """Generate comprehensive investigation report"""
     console.print("\n🔍 [bold blue]Starting Investigation Report Generation...[/bold blue]")
     

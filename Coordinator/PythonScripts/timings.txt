@@ -1,0 +1,19 @@
+Testing FinTracer execution times, using 'fintracer-timing-benchmark.py'  
+
+
+Transaction set size count  |  Propagation time (s)  |  Intersect time (s)  |  Total time (s) 
+( accounts / transactions )   ( forward / reverse )
+
+15 / 374                    |     52.708 / 55.812    |        69.331        |    812.121
+
+50 / 1451                   |     51.482 / 51.402    |        64.818        |    766.080
+
+100 / 2916                  |     56.698 / 55.749    |        65.819        |    825.714
+100 / 2916                  |     52.984 / 52.614    |        66.905        |    786.843
+
+500 / 15036                 |     51.435 / 51.880    |        68.189        |    779.497  
+
+1000 / 30077                |     55.895 / 57.097    |        71.684        |    842.351
+
+6000 / 179774               |     53.
+

@@ -4,6 +4,9 @@ requests
 pytest
 numpy
 pika
+tqdm
 sqlalchemy
+colorama
+rich
 psycopg2-binary
 sqlalchemy_views

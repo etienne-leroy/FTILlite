@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinTracer Project Structure Tree (fixed + PNG export)</title>
+  <style>
+    /* ————— LAYOUT ————— */
+    html,body{
+      height:100%;margin:0;
+      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    }
+    .container{
+      max-width:1800px;margin:0 auto;min-height:100%;
+      background:rgba(255,255,255,.95);
+      padding:32px 40px 64px;
+      border-radius:20px;
+      box-shadow:0 24px 48px rgba(0,0,0,.12);
+      backdrop-filter:blur(12px);
+    }
+    .header{text-align:center;margin-bottom:28px;border-bottom:3px solid #667eea;padding-bottom:18px;}
+    .header h1{font-size:clamp(2rem,4vw,2.75rem);margin:0 0 10px;background:linear-gradient(45deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    /* ————— CONTROLS & LEGEND ————— */
+    .controls,.legend{
+      display:flex;justify-content:center;
+      gap:16px;flex-wrap:wrap;margin:24px 0;
+    }
+    .btn{
+      background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:0;
+      padding:10px 22px;border-radius:26px;font-size:14px;cursor:pointer;
+      transition:transform .25s ease,box-shadow .25s ease;
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+    .legend-item{display:flex;align-items:center;gap:8px;font-size:14px;}
+    .legend-color{width:16px;height:16px;border-radius:50%;}
+    /* ————— SVG / TREE ————— */
+    #chart{
+      width:100%;height:70vh;border:2px solid #e9ecef;border-radius:16px;
+      background:#fff;display:block;
+    }
+    .node text{pointer-events:none;font-family:inherit;}
+    .node:hover circle{stroke:#ff6b6b;stroke-width:3px;}
+    .tooltip{position:absolute;background:rgba(0,0,0,.85);color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:999;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🌳 FinTracer Project Structure</h1>
+      <p>Interactive visualisation of the directory tree</p>
+    </header>
+
+    <!-- Controls -->
+    <nav class="controls">
+      <button class="btn" onclick="expandAll()">📂 Expand All</button>
+      <button class="btn" onclick="collapseAll()">📁 Collapse All</button>
+      <button class="btn" onclick="zoomOut()">🔍- Zoom Out</button>
+      <button class="btn" onclick="resetZoom()">🔍 Reset Zoom</button>
+      <button class="btn" onclick="zoomIn()">🔍+ Zoom In</button>
+      <button class="btn" onclick="fitToScreen()">📏 Fit to Screen</button>
+      <button class="btn" onclick="centerTree()">🎯 Center</button>
+      <button class="btn" onclick="refreshTree()">🔄 Refresh Tree</button>
+      <button class="btn" onclick="downloadPNG()">💾 Download PNG</button>
+    </nav>
+
+    <!-- Legend -->
+    <section class="legend">
+      <div class="legend-item"><span class="legend-color" style="background:#4a90e2"></span>Directories</div>
+      <div class="legend-item"><span class="legend-color" style="background:#f39c12"></span>Python files</div>
+      <div class="legend-item"><span class="legend-color" style="background:#27ae60"></span>Config files</div>
+      <div class="legend-item"><span class="legend-color" style="background:#e74c3c"></span>Log files</div>
+      <div class="legend-item"><span class="legend-color" style="background:#95a5a6"></span>Other files</div>
+    </section>
+
+    <svg id="chart"></svg>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ————————————— GLOBALS & HELPERS —————————————
+    const svg = d3.select('#chart');
+    const g   = svg.append('g');
+    const tooltip = d3.select('#tooltip');
+    let root, tree, zoom;
+    let nodeId=0;
+
+    const colour=d=>{
+      if(!d.data) return '#95a5a6';
+      if(d.data.type==='directory') return d.children||d._children? '#4a90e2':'#2980b9';
+      const n=(d.data.name||'').toLowerCase();
+      if(n.endsWith('.py'))return '#f39c12';
+      if(/\.(json|ya?ml|ini)$/.test(n))return '#27ae60';
+      if(n.endsWith('.log'))return '#e74c3c';
+      if(/\.(md|txt)$/.test(n))return '#9b59b6';
+      if(n.endsWith('.go'))return '#00ADD8';
+      if(n.endsWith('.csv'))return '#17a2b8';
+      if(n.endsWith('.pdf'))return '#dc3545';
+      return '#95a5a6';
+    };
+    const fSize = d=> d.data && d.data.type==='directory' ? ([20,18,16,14][d.depth]||13) : 12;
+
+    // ————————————— INITIALISE —————————————
+    function init(){
+      zoom=d3.zoom().scaleExtent([0.05,20]).on('zoom',e=>g.attr('transform',e.transform));
+      svg.call(zoom);
+
+      // Add keyboard shortcuts
+      d3.select('body').on('keydown', handleKeydown);
+
+      d3.json('tree.json').then(data=>{
+        const treeData=Array.isArray(data)?data[0]:data;
+        root=d3.hierarchy(treeData,d=> (d.contents||[]).filter(c=>c.type&&c.name&&!c.error&&c.type!=='report'&&c.name!=='__pycache__'))
+          .sort((a,b)=> a.data.type===b.data.type? d3.ascending(a.data.name,b.data.name):(a.data.type==='directory'?-1:1));
+        root.each(d=>{if(d.depth>2){d._children=d.children;d.children=null;}});
+        tree=d3.tree().nodeSize([42,260]);
+        update(root);fitToScreen();
+      }).catch(err=>showError('Failed to load tree.json → '+err.message));
+    }
+
+    // ————————————— UPDATE —————————————
+    function update(source){
+      const nodes=tree(root).descendants();
+      const links=tree(root).links();
+      const xExt=d3.extent(nodes,d=>d.x), yExt=d3.extent(nodes,d=>d.y);
+      const margin={top:80,right:200,bottom:80,left:200};
+      const fullW=yExt[1]-yExt[0]+margin.left+margin.right;
+      const fullH=xExt[1]-xExt[0]+margin.top+margin.bottom;
+      svg.attr('viewBox',[yExt[0]-margin.left,xExt[0]-margin.top,fullW,fullH]);
+      svg.call(zoom.translateExtent([[yExt[0]-margin.left,xExt[0]-margin.top],[yExt[1]+margin.right,xExt[1]+margin.bottom]]));
+
+      const node=g.selectAll('g.node').data(nodes,d=>d.id||(d.id=++nodeId));
+      const nodeEnter=node.enter().append('g').attr('class','node')
+        .attr('transform',`translate(${source.y0||0},${source.x0||0})`)
+        .style('cursor','pointer')
+        .on('click',(e,d)=>{d.children?(d._children=d.children,d.children=null):(d.children=d._children,d._children=null);update(d);})
+        .on('mouseover',(e,d)=>showTip(e,d)).on('mouseout',hideTip);
+      nodeEnter.append('circle').attr('r',1e-6).attr('fill',colour).attr('stroke','#333').attr('stroke-width',2);
+      nodeEnter.append('text').attr('dy','0.35em').attr('x',d=>d.children||d._children?-28:28)
+        .attr('text-anchor',d=>d.children||d._children?'end':'start')
+        .style('font-weight',d=>d.data.type==='directory'?'600':'400')
+        .style('font-size',d=>fSize(d)+'px')
+        .text(d=>{const max=d.data.type==='directory'?(d.depth<=1?40:d.depth<=2?32:28):24;return d.data.name.length>max?d.data.name.slice(0,max-3)+'…':d.data.name;});
+      const nodeMerge=nodeEnter.merge(node);
+      nodeMerge.transition().duration(750).attr('transform',d=>`translate(${d.y},${d.x})`);
+      nodeMerge.select('circle').transition().duration(750).attr('r',d=>d.data.type==='directory'?(d.depth<=1?18:d.depth==2?14:10):7).attr('fill',colour);
+      nodeMerge.select('text').style('font-size',d=>fSize(d)+'px');
+      node.exit().transition().duration(750).attr('transform',d=>`translate(${source.y},${source.x})`).remove().select('circle').attr('r',1e-6);
+
+      const link=g.selectAll('path.link').data(links,d=>d.target.id);
+      const linkEnter=link.enter().insert('path','g').attr('class','link').attr('fill','none').attr('stroke','#bbb').attr('stroke-width',1.5).attr('stroke-opacity',.55).attr('d',d=>diag(source,source));
+      linkEnter.merge(link).transition().duration(750).attr('d',d=>diag(d.source,d.target));
+      link.exit().transition().duration(750).attr('d',d=>diag(source,source)).remove();
+      nodes.forEach(d=>{d.x0=d.x;d.y0=d.y;});
+    }
+
+    function diag(s,d){return`M ${s.y} ${s.x} C ${(s.y+d.y)/2} ${s.x}, ${(s.y+d.y)/2} ${d.x}, ${d.y} ${d.x}`;}
+    function showTip(e,d){if(!d.data)return;const html=d.data.type==='directory'?`📂 <b>${d.data.name}</b><br>Children: ${(d.children||d._children||[]).length}`:`📄 <b>${d.data.name}</b>`;tooltip.html(html).style('left',(e.pageX+12)+'px').style('top',(e.pageY-10)+'px').style('opacity',1);}
+    function hideTip(){tooltip.style('opacity',0);}  
+    // ————————————— CONTROLS —————————————
+    const expandAll=()=>{root.each(d=>{if(d._children){d.children=d._children;d._children=null;}});update(root);};
+    const collapseAll=()=>{root.each(d=>{if(d.children&&d.depth>1){d._children=d.children;d.children=null;}});update(root);};
+    const resetZoom=()=>{svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity);};
+    const refreshTree=()=>{location.reload();};
+    const zoomIn=()=>{svg.transition().duration(200).call(zoom.scaleBy,1.5);};
+    const zoomOut=()=>{svg.transition().duration(200).call(zoom.scaleBy,1/1.5);};
+    
+    function fitToScreen(){
+      const b=g.node().getBBox();
+      const w=svg.node().clientWidth, h=svg.node().clientHeight;
+      const scale=Math.min(w/(b.width+100), h/(b.height+100), 0.8);
+      const tx=(w-b.width*scale)/2-b.x*scale, ty=(h-b.height*scale)/2-b.y*scale;
+      svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(tx,ty).scale(scale));
+    }
+    
+    function centerTree(){
+      const b=g.node().getBBox();
+      const w=svg.node().clientWidth, h=svg.node().clientHeight;
+      const currentTransform = d3.zoomTransform(svg.node());
+      const scale = currentTransform.k;
+      const tx=(w-b.width*scale)/2-b.x*scale, ty=(h-b.height*scale)/2-b.y*scale;
+      svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(tx,ty).scale(scale));
+    }
+    
+    function handleKeydown(event){
+      switch(event.key){
+        case '+': case '=': zoomIn(); event.preventDefault(); break;
+        case '-': case '_': zoomOut(); event.preventDefault(); break;
+        case '0': resetZoom(); event.preventDefault(); break;
+        case 'f': case 'F': fitToScreen(); event.preventDefault(); break;
+        case 'c': case 'C': centerTree(); event.preventDefault(); break;
+      }
+    }
+    function showError(msg){g.selectAll('*').remove();g.append('text').attr('x',0).attr('y',15).text(msg).attr('fill','#e74c3c');}
+
+    // ————————————— PNG EXPORT —————————————
+    function downloadPNG(){
+      const serializer=new XMLSerializer();
+      let svgString=serializer.serializeToString(svg.node());
+      
+      // Add white background to SVG string
+      const svgWithBackground = svgString.replace(
+        '<svg',
+        '<svg style="background-color: white;"'
+      );
+      
+      const {width,height}=svg.node().getBBox();
+      const SCALE=2;
+      const canvas=Object.assign(document.createElement('canvas'),{width:width*SCALE,height:height*SCALE});
+      const ctx=canvas.getContext('2d');
+      
+      // Fill canvas with white background
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      const img=new Image();
+      img.onload=()=>{
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        const link=document.createElement('a');
+        link.download='FinTracer-tree.png';
+        link.href=canvas.toDataURL('image/png');
+        link.click();
+      };
+      img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svgWithBackground)));
+    }
+
+    document.addEventListener('DOMContentLoaded',init);
+  </script>
+</body>
+</html>

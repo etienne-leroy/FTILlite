@@ -41,7 +41,7 @@ def load_fintracer_results(results_file):
         console.print(f"[bold red]Error loading results file: {e}[/bold red]")
         return None
 
-def list_available_results(results_dir="v2.0/fintracer_results"):
+def list_available_results(results_dir="fintracer-eu/fintracer_results"):
     """List available FinTracer result files"""
     if not os.path.exists(results_dir):
         console.print(f"[yellow]Results directory '{results_dir}' not found.[/yellow]")
@@ -64,10 +64,10 @@ def main():
     parser = argparse.ArgumentParser(description='Run investigation analysis on saved FinTracer results')
     parser.add_argument('--results-file', '-f', type=str, 
                        help='Path to FinTracer results JSON file')
-    parser.add_argument('--results-dir', '-d', type=str, default='v2.0/fintracer_results',
-                       help='Directory containing FinTracer results (default: v2.0/fintracer_results)')
-    parser.add_argument('--output-dir', '-o', type=str, default='v2.0/investigation_reports',
-                       help='Output directory for investigation reports (default: v2.0/investigation_reports)')
+    parser.add_argument('--results-dir', '-d', type=str, default='fintracer-eu/fintracer_results',
+                       help='Directory containing FinTracer results (default: fintracer-eu/fintracer_results)')
+    parser.add_argument('--output-dir', '-o', type=str, default='fintracer-eu/investigation_reports',
+                       help='Output directory for investigation reports (default: fintracer-eu/investigation_reports)')
     parser.add_argument('--list', '-l', action='store_true',
                        help='List available result files')
     

@@ -14,7 +14,7 @@ with open('LICENSE') as f:
 setup(
     name='ftillite',
     version='0.1.0',
-    description='Ftillite package to orchestrate PoC algorithms.',
+    description='FTILlite library',
     long_description=readme,
     author='***',
     author_email='***',

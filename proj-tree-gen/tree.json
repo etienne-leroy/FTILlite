@@ -1,0 +1,1392 @@
+[
+  {
+    "type": "directory",
+    "name": "ftillite",
+    "contents": [
+      {
+        "type": "directory",
+        "name": "Coordinator",
+        "contents": [
+          {
+            "type": "directory",
+            "name": "ftillitelibrary",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "ftillite",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "__init__.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "client.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "compute_manager.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "segment_client.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "segment_node.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test.ipynb"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "ftillite.egg-info",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "dependency_links.txt"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PKG-INFO"
+                  },
+                  {
+                    "type": "file",
+                    "name": "SOURCES.txt"
+                  },
+                  {
+                    "type": "file",
+                    "name": "top_level.txt"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "tests",
+                "contents": [
+                  {
+                    "type": "directory",
+                    "name": "profiler_stats",
+                    "contents": []
+                  },
+                  {
+                    "type": "file",
+                    "name": "__init__.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "check_elgamal.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "check_listmap.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "savecompute_pytesting.pickle"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_all.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_bytearray.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_ed25519int.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_float.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_int.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_misc.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_array_multi.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_cryptographic_functions.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_ed25519_array.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_listmap.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_misc.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_save_load_delete.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "test_transmit.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "util.py"
+                  }
+                ]
+              },
+              {
+                "type": "file",
+                "name": "docker-build.sh"
+              },
+              {
+                "type": "file",
+                "name": "LICENSE"
+              },
+              {
+                "type": "file",
+                "name": "Makefile"
+              },
+              {
+                "type": "file",
+                "name": "README.rst"
+              },
+              {
+                "type": "file",
+                "name": "requirements.txt"
+              },
+              {
+                "type": "file",
+                "name": "setup.py"
+              }
+            ]
+          },
+          {
+            "type": "directory",
+            "name": "Notebooks",
+            "contents": [
+              {
+                "type": "file",
+                "name": "demo_commands.ipynb"
+              },
+              {
+                "type": "file",
+                "name": "test_cases.ipynb"
+              },
+              {
+                "type": "file",
+                "name": "test_saveload.ipynb"
+              },
+              {
+                "type": "file",
+                "name": "test_transmitlistmap.ipynb"
+              },
+              {
+                "type": "file",
+                "name": "testing_commands.ipynb"
+              }
+            ]
+          },
+          {
+            "type": "directory",
+            "name": "PythonScripts",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "helpers",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "__init__.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "context.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "crypto.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "display.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "further_investigation.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "load_accounts.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "load_transactions.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "save_fintracer_results.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "set_operations.py"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "TypeDefinitions",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "dictionary.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "elgamal.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "pair.py"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "v0.1",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "debug_elgamal.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-debug.ipynb"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-debug.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-mock.ipynb"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-mock.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-real.ipynb"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-real.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "mock_elgamal.py"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "v0.5",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "fintracer-3step.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-4step.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer_nonlinear.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer_tree.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ftillite_utils.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "generate_data.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "generate_data_lux.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "hello_world.py"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "v1.0",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "combined_helper.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-cyclic.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-linear3.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-linear3_lux.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-nonlinear4.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-tree5.py"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "v2.0",
+                "contents": [
+                  {
+                    "type": "directory",
+                    "name": "fintracer_results",
+                    "contents": [
+                      {
+                        "type": "file",
+                        "name": "double-pass-save.json"
+                      },
+                      {
+                        "type": "file",
+                        "name": "linear-test.json"
+                      },
+                      {
+                        "type": "file",
+                        "name": "michael-demo-results.json"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "directory",
+                    "name": "investigation_reports",
+                    "contents": [
+                      {
+                        "type": "directory",
+                        "name": "investigation_2025-07-03_09-14-26",
+                        "contents": [
+                          {
+                            "type": "file",
+                            "name": "all_transactions.csv"
+                          },
+                          {
+                            "type": "file",
+                            "name": "external_transactions.csv"
+                          },
+                          {
+                            "type": "file",
+                            "name": "investigation_analysis.json"
+                          },
+                          {
+                            "type": "file",
+                            "name": "investigation_summary.txt"
+                          },
+                          {
+                            "type": "file",
+                            "name": "suspicious_accounts_details.csv"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "directory",
+                        "name": "investigation_2025-07-03_10-13-10",
+                        "contents": [
+                          {
+                            "type": "file",
+                            "name": "all_transactions.csv"
+                          },
+                          {
+                            "type": "file",
+                            "name": "external_transactions.csv"
+                          },
+                          {
+                            "type": "file",
+                            "name": "investigation_analysis.json"
+                          },
+                          {
+                            "type": "file",
+                            "name": "investigation_summary.txt"
+                          },
+                          {
+                            "type": "file",
+                            "name": "suspicious_accounts_details.csv"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "directory",
+                    "name": "logs",
+                    "contents": [
+                      {
+                        "type": "file",
+                        "name": "LOG-ALL-3-ACCOUNT LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-ALL-4-ACCOUNT NON-LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-CLIENT-3-ACCOUNT LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-CLIENT-4-ACCOUNT NON-LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-COMPUTE MGR-3-ACCOUNT LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-COMPUTE MGR-4-ACCOUNT NON-LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-SEGMENT CLIENT-3-ACCOUNT LINEAR TYPOLOGY.log"
+                      },
+                      {
+                        "type": "file",
+                        "name": "LOG-SEGMENT CLIENT-4-ACCOUNT NON-LINEAR TYPOLOGY.log"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-accum.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-cyclic.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-linear3.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-nonlinear4.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-tree5.py"
+                  },
+                  {
+                    "type": "file",
+                    "name": "fintracer-unified.py"
+                  }
+                ]
+              },
+              {
+                "type": "file",
+                "name": "fintracer-cyclic.py"
+              },
+              {
+                "type": "file",
+                "name": "fintracer-timing-benchmark.py"
+              },
+              {
+                "type": "file",
+                "name": "run_investigation.py"
+              },
+              {
+                "type": "file",
+                "name": "timings.txt"
+              }
+            ]
+          },
+          {
+            "type": "file",
+            "name": "Dockerfile"
+          },
+          {
+            "type": "file",
+            "name": "requirements.txt"
+          }
+        ]
+      },
+      {
+        "type": "directory",
+        "name": "Data",
+        "contents": [
+          {
+            "type": "directory",
+            "name": "synthesised_data",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "transactions_2025-07-03-09-59-41",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "all_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "all_transactions.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "all_transactions_tmp.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "clean_all_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "degree_distribution.pdf"
+                  },
+                  {
+                    "type": "file",
+                    "name": "graph.graphml"
+                  },
+                  {
+                    "type": "file",
+                    "name": "graph_info.txt"
+                  },
+                  {
+                    "type": "file",
+                    "name": "params.ini"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_1_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_1_transactions.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_1_transactions_tmp.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_2_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_2_transactions.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_2_transactions_tmp.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_3_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_3_transactions.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_3_transactions_tmp.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_4_accounts.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_4_transactions.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "PEER_4_transactions_tmp.csv"
+                  },
+                  {
+                    "type": "file",
+                    "name": "shortest_path_lengths_distribution.pdf"
+                  },
+                  {
+                    "type": "file",
+                    "name": "transaction_amount_distribution.pdf"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "file",
+            "name": "build_pickle_schema.py"
+          },
+          {
+            "type": "file",
+            "name": "build_pickle_schema_lux.py"
+          },
+          {
+            "type": "file",
+            "name": "build_transaction_schema.py"
+          },
+          {
+            "type": "file",
+            "name": "build_transaction_schema_lux.py"
+          },
+          {
+            "type": "file",
+            "name": "debug_data_issue.py"
+          },
+          {
+            "type": "file",
+            "name": "debug_fintracer_flow.py"
+          },
+          {
+            "type": "file",
+            "name": "fintracer_performance_analysis.pdf"
+          },
+          {
+            "type": "file",
+            "name": "fintracer_performance_analysis.png"
+          },
+          {
+            "type": "file",
+            "name": "fix_materialized_views.py"
+          },
+          {
+            "type": "file",
+            "name": "generate_data.py"
+          },
+          {
+            "type": "file",
+            "name": "generate_data_large.py"
+          },
+          {
+            "type": "file",
+            "name": "generate_data_lux.py"
+          },
+          {
+            "type": "file",
+            "name": "load_data.py"
+          },
+          {
+            "type": "file",
+            "name": "load_data_lux.py"
+          },
+          {
+            "type": "file",
+            "name": "params.ini"
+          },
+          {
+            "type": "file",
+            "name": "params_large.ini"
+          },
+          {
+            "type": "file",
+            "name": "params_lux.ini"
+          },
+          {
+            "type": "file",
+            "name": "params_mini.ini"
+          },
+          {
+            "type": "file",
+            "name": "plot_fintracer_performance.py"
+          },
+          {
+            "type": "file",
+            "name": "README.md"
+          },
+          {
+            "type": "file",
+            "name": "requirements.txt"
+          },
+          {
+            "type": "file",
+            "name": "verify_data.py"
+          },
+          {
+            "type": "file",
+            "name": "verify_data_lux.py"
+          }
+        ]
+      },
+      {
+        "type": "directory",
+        "name": "Documentation",
+        "contents": [
+          {
+            "type": "directory",
+            "name": "Purgles",
+            "contents": [
+              {
+                "type": "file",
+                "name": "darklite.pdf"
+              },
+              {
+                "type": "file",
+                "name": "edge_finding.pdf"
+              },
+              {
+                "type": "file",
+                "name": "extreme.pdf"
+              },
+              {
+                "type": "file",
+                "name": "fast_intersection.pdf"
+              },
+              {
+                "type": "file",
+                "name": "ft_combined.pdf"
+              },
+              {
+                "type": "file",
+                "name": "isolated.pdf"
+              },
+              {
+                "type": "file",
+                "name": "keyswitch.pdf"
+              },
+              {
+                "type": "file",
+                "name": "linetracer.pdf"
+              },
+              {
+                "type": "file",
+                "name": "oblivious_a.pdf"
+              },
+              {
+                "type": "file",
+                "name": "oblivious_b.pdf"
+              },
+              {
+                "type": "file",
+                "name": "oblivious_c.pdf"
+              },
+              {
+                "type": "file",
+                "name": "pair_finding.pdf"
+              },
+              {
+                "type": "file",
+                "name": "path_finding.pdf"
+              },
+              {
+                "type": "file",
+                "name": "sideinfo.pdf"
+              },
+              {
+                "type": "file",
+                "name": "small_updates.pdf"
+              },
+              {
+                "type": "file",
+                "name": "The_FinTracer_Algorithm.pdf"
+              }
+            ]
+          },
+          {
+            "type": "file",
+            "name": "ftillite_pythonapi.pdf"
+          },
+          {
+            "type": "file",
+            "name": "Solution-Diagram.png"
+          },
+          {
+            "type": "file",
+            "name": "Solution-Diagram.vsdx"
+          }
+        ]
+      },
+      {
+        "type": "directory",
+        "name": "Peer",
+        "contents": [
+          {
+            "type": "directory",
+            "name": "cmd",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "segment",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "main.go"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "directory",
+            "name": "lib",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "libftcrypto",
+                "contents": [
+                  {
+                    "type": "directory",
+                    "name": "out",
+                    "contents": []
+                  },
+                  {
+                    "type": "directory",
+                    "name": "src",
+                    "contents": [
+                      {
+                        "type": "file",
+                        "name": "cuda_wrap.h"
+                      },
+                      {
+                        "type": "file",
+                        "name": "fe_constants.h"
+                      },
+                      {
+                        "type": "file",
+                        "name": "ftcrypto.c"
+                      },
+                      {
+                        "type": "file",
+                        "name": "ftcrypto.cu"
+                      },
+                      {
+                        "type": "file",
+                        "name": "ftcrypto.h"
+                      },
+                      {
+                        "type": "file",
+                        "name": "ge25519_cmov8_base.h"
+                      },
+                      {
+                        "type": "file",
+                        "name": "ge25519_double_scalarmult_vartime_base2.h"
+                      },
+                      {
+                        "type": "file",
+                        "name": "run_tests.cc"
+                      },
+                      {
+                        "type": "file",
+                        "name": "sodium_fe.cu"
+                      },
+                      {
+                        "type": "file",
+                        "name": "sodium_ge.cu"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "file",
+                    "name": "LICENSE"
+                  },
+                  {
+                    "type": "file",
+                    "name": "README.md"
+                  }
+                ]
+              },
+              {
+                "type": "file",
+                "name": "build-libftcrypto.sh"
+              },
+              {
+                "type": "file",
+                "name": "ftcrypto.h"
+              },
+              {
+                "type": "file",
+                "name": "libftcrypto.so"
+              }
+            ]
+          },
+          {
+            "type": "directory",
+            "name": "segment",
+            "contents": [
+              {
+                "type": "directory",
+                "name": "commands",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "aes.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "arange.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "astype.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "auxdb.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "broadcast.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "byteproject.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "clearvariablestore.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "commands.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "concat.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "contains.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "cumsum.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "del.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "delitem.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ecdsa.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "equalint.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "getitem.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "grain128.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "index.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "init.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "len.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "listmap.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "logmessage.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "logstats.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "logvariable.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "lookup.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "mux.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "newarray.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "newflist.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "newilist.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "operators.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "random.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "reduce.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "rsa.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "serialize.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "session.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "setitem.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "setlength.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "sha.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "slicetoindicies.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "sort.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "tolist.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "transmit.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "verify.go"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "crypto",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "aes.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ecdsa.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "grain128.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "rsa.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "rsa_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "sha.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "stream.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "stream_test.go"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "net",
+                "contents": [
+                  {
+                    "type": "directory",
+                    "name": "http",
+                    "contents": [
+                      {
+                        "type": "file",
+                        "name": "client.go"
+                      },
+                      {
+                        "type": "file",
+                        "name": "download.go"
+                      },
+                      {
+                        "type": "file",
+                        "name": "handler.go"
+                      },
+                      {
+                        "type": "file",
+                        "name": "middlewares.go"
+                      },
+                      {
+                        "type": "file",
+                        "name": "segment_client.go"
+                      },
+                      {
+                        "type": "file",
+                        "name": "segment_endpoint.go"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "types",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "bytearrayarray.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ed25519array.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ed25519array_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ed25519intarray.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "ed25519intarray_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "floatarray.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "integerarray.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "listmap.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "listmap_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "node.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "pair.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "slice.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "typecode.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "types.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "types_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "types_test_helpers.go"
+                  }
+                ]
+              },
+              {
+                "type": "directory",
+                "name": "variables",
+                "contents": [
+                  {
+                    "type": "file",
+                    "name": "pickle.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "store.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "store_test.go"
+                  },
+                  {
+                    "type": "file",
+                    "name": "variables.go"
+                  }
+                ]
+              },
+              {
+                "type": "file",
+                "name": "database.go"
+              },
+              {
+                "type": "file",
+                "name": "options.go"
+              },
+              {
+                "type": "file",
+                "name": "segment.go"
+              },
+              {
+                "type": "file",
+                "name": "segment_benchmarks_test.go"
+              },
+              {
+                "type": "file",
+                "name": "segment_crypto_test.go"
+              },
+              {
+                "type": "file",
+                "name": "segment_operations_test.go"
+              },
+              {
+                "type": "file",
+                "name": "segment_test.go"
+              },
+              {
+                "type": "file",
+                "name": "segment_test_helpers.go"
+              }
+            ]
+          },
+          {
+            "type": "file",
+            "name": "Dockerfile"
+          },
+          {
+            "type": "file",
+            "name": "entrypoint.sh"
+          },
+          {
+            "type": "file",
+            "name": "go.mod"
+          },
+          {
+            "type": "file",
+            "name": "go.sum"
+          }
+        ]
+      },
+      {
+        "type": "directory",
+        "name": "postgres-init",
+        "contents": [
+          {
+            "type": "directory",
+            "name": "init-multi-db.sh",
+            "contents": []
+          }
+        ]
+      },
+      {
+        "type": "file",
+        "name": "docker-compose.yml"
+      },
+      {
+        "type": "file",
+        "name": "ftillite-peer"
+      },
+      {
+        "type": "file",
+        "name": "index.html"
+      },
+      {
+        "type": "file",
+        "name": "libftcrypto.so"
+      },
+      {
+        "type": "file",
+        "name": "LICENSE"
+      },
+      {
+        "type": "file",
+        "name": "Makefile"
+      },
+      {
+        "type": "file",
+        "name": "README.md"
+      },
+      {
+        "type": "file",
+        "name": "setup_nvidia_toolkit.sh"
+      },
+      {
+        "type": "file",
+        "name": "update_tree.py"
+      }
+    ]
+  },
+  {
+    "type": "report",
+    "directories": 41,
+    "files": 285,
+    "generated": "2025-07-03 10:46:02",
+    "root_path": "/home/ec2-user/ftillite"
+  }
+]

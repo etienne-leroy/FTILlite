@@ -105,19 +105,19 @@ generate_all:
 
 
 fintracer:
-	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd v2.0 ; python fintracer-unified.py )
+	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd fintracer-eu ; python fintracer-unified.py )
 
 linear3:
-	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd v2.0 ; python fintracer-linear3.py )
+	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd fintracer-eu ; python fintracer-linear3.py )
 
 nonlinear4:
-	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd v2.0 ; python fintracer-nonlinear4.py )
+	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd fintracer-eu ; python fintracer-nonlinear4.py )
 
 tree5:
-	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd v2.0 ; python fintracer-tree5.py ) 
+	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd fintracer-eu ; python fintracer-tree5.py ) 
 
 accum:
-	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd v2.0 ; python fintracer-accum.py )
+	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; cd fintracer-eu ; python fintracer-accum.py )
 
 investigate:
 	@( cd Coordinator ; source .venv/bin/activate ; cd PythonScripts ; python run_investigation.py )
